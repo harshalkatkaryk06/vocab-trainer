@@ -16,7 +16,7 @@ export const searchWords = async (req, res) => {
 
 
   try {
-    const prompt = `Provide the meaning of the word "${word}" and use it in a sentence. Format the response clearly with meaning and example sentence.`;
+    const prompt = `Provide the meaning of the word "${word}" in english, marathi, hindi also give its correct pronouciation in these mentioned languages and use it in a sentence. Format the response clearly with meaning and example sentence.`;
 
 
     const response = await openai.chat.completions.create({
