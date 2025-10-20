@@ -1,75 +1,109 @@
-import OpenAI from 'openai';
+import OpenAI from "openai";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import Word from "../models/saveWord_Model.js";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+dotenv.config();
 
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("MongoDB connected...");
+  } catch (error) {
+    console.error("MongoDB connection failed:", error.message);
+    process.exit(1);
+  }
+};
+connectDB();
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+// Exported variables holding aggregated results
 export let correct_option;
 export let correct_option_number;
 export let incorrect_options;
 export let numberedOptions;
+export let quizzes = [];  // Store all generated quizzes here for checking
 
 export const Gen_Quizes = async (req, res) => {
-  const { word } = req.body;
-
-  if (!word) {
-    return res.status(400).json({ error: "Word is required" });
-  }
-
   try {
-    const prompt = `Provide 3 wrong meanings of the word "${word}" and one correct meaning for a quiz, as a numbered list. Always put the correct meaning as option 4.`;
+    const wordEntries = await Word.find();
+    console.log(`Fetched ${wordEntries.length} words from DB.`);
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-4",
-      messages: [
-        { role: "system", content: "You are a helpful dictionary assistant." },
-        { role: "user", content: prompt },
-      ],
-      temperature: 0.5,
-    });
+    if (!wordEntries.length) {
+      return res.status(404).json({ error: "No words in dictionary" });
+    }
 
-    // Raw result text from GPT
-    const result = response.choices[0].message.content;
+    const allQuizzes = [];
 
-    // Split by line and clean, removing numbering (1., 2:, etc.)
-    const options = result.split('\n').filter(Boolean).map(line => {
-      return line.replace(/^\s*\d+[\).:]\s*/, '').trim();
-    });
+    for (const entry of wordEntries) {
+      const { word, meaning: correctMeaning } = entry;
+      console.log(`\nGenerating quiz for word: "${word}"`);
+      console.log(`Correct meaning: "${correctMeaning}"`);
 
-    // Shuffle numbers 1-4 to assign unique random numbers
-    const numbers = [1, 2, 3, 4].sort(() => Math.random() - 0.5);
+      const prompt = `Provide 3 plausible wrong meanings of the word "${word}". Return as a numbered list.`;
+      console.log(`Prompt sent to OpenAI:\n${prompt}`);
 
-    // Map options to numbers
-    numberedOptions = options.map((option, index) => ({
-      number: numbers[index],
-      option,
-    }));
+      const response = await openai.chat.completions.create({
+        model: "gpt-4",
+        messages: [
+          { role: "system", content: "You are a helpful dictionary assistant." },
+          { role: "user", content: prompt },
+        ],
+        temperature: 0.5,
+      });
 
-    // Find which option is the correct one (4th in original options)
-    const correctOptionObj = numberedOptions.find(({ option }) => option === options[3]);
+      const rawIncorrect = response.choices[0].message.content;
+      console.log(`Raw incorrect meanings:\n${rawIncorrect}`);
 
-    // Set exported variables
-    correct_option = correctOptionObj.option;
-    correct_option_number = correctOptionObj.number;
-    incorrect_options = numberedOptions.filter(({ option }) => option !== correct_option);
+      const incorrects = rawIncorrect
+        .split("\n")
+        .filter(Boolean)
+        .map((line) => line.replace(/^\s*\d+[\).:]\s*/, "").trim());
+      console.log(`Parsed incorrect meanings:\n${JSON.stringify(incorrects, null, 2)}`);
 
-    // Log options with numbers
-    numberedOptions.forEach(({ number, option }) => {
-      console.log(`Option ${number}: ${option}`);
-    });
+      const options = [...incorrects.slice(0, 3), correctMeaning];
+      console.log(`Options before numbering:\n${JSON.stringify(options, null, 2)}`);
 
-    console.log("Correct option number:", correct_option_number);
+      const numbers = [1, 2, 3, 4].sort(() => Math.random() - 0.5);
+      console.log(`Assigning random numbers: ${numbers}`);
 
-    // Respond with structured data for client
-    res.json({
-      correct_option,
-      correct_option_number,
-      incorrect_options,
-      numberedOptions,
-    });
+      const numberedOptionsLocal = options.map((option, index) => ({
+        number: numbers[index],
+        option,
+      }));
+      console.log(`Numbered options:\n${JSON.stringify(numberedOptionsLocal, null, 2)}`);
 
+      const correctOptionObj = numberedOptionsLocal.find(({ option }) => option === correctMeaning);
+      console.log(`Correct option: "${correctOptionObj.option}" at number ${correctOptionObj.number}`);
+
+      allQuizzes.push({
+        word,
+        correct_option: correctOptionObj.option,
+        correct_option_number: correctOptionObj.number,
+        incorrect_options: numberedOptionsLocal.filter(({ option }) => option !== correctOptionObj.option),
+        numberedOptions: numberedOptionsLocal,
+      });
+      console.log(`Quiz for "${word}" added.\n---------------------------\n`);
+    }
+
+    // Save last quiz info globally
+    const lastQuiz = allQuizzes[allQuizzes.length - 1];
+    correct_option = lastQuiz.correct_option;
+    correct_option_number = lastQuiz.correct_option_number;
+    incorrect_options = lastQuiz.incorrect_options;
+    numberedOptions = lastQuiz.numberedOptions;
+
+    quizzes = allQuizzes; // Export all quizzes for check quiz file
+
+    console.log(`\nAll Quizzes Generated:\n${JSON.stringify(allQuizzes, null, 2)}`);
+
+    res.json({ quizzes: allQuizzes });
   } catch (error) {
-    console.error("OpenAI API error:", error);
-    res.status(500).json({ error: "Failed to get response from OpenAI" });
+    console.error("Error during quiz generation:", error);
+    res.status(500).json({ error: "Failed to generate quizzes" });
   }
 };

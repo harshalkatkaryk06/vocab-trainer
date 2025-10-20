@@ -1,18 +1,32 @@
-// Import the correct and incorrect options with assigned numbers
-import { correct_option_number, incorrect_options } from './Gen_Quizes.js';
+import { quizzes } from "./Gen_Quizes.js"; // Import the quizzes generated
 
 export const checkQuizAnswer = (req, res) => {
-  // User's selected option number from request body
-  const userSelection = Number(req.body.selectedNumber);
+  const userSelections = req.body.selectedNumbers; // Expect an array like [4, 2]
 
-  if (userSelection === correct_option_number) {
-    console.log("Correct option selected");
-    res.json({ message: "Correct option selected" });
-  } else if (incorrect_options.some(opt => opt.number === userSelection)) {
-    console.log("Incorrect option selected");
-    res.json({ message: "Incorrect option selected" });
-  } else {
-    console.log("Invalid option selected");
-    res.status(400).json({ error: "Invalid option selected" });
+  if (!Array.isArray(userSelections)) {
+    return res.status(400).json({ error: "selectedNumbers must be an array" });
   }
+
+  if (!quizzes || quizzes.length === 0) {
+    return res.status(400).json({ error: "No quizzes generated yet" });
+  }
+
+  const results = {
+    correctWords: [],
+    incorrectWords: [],
+  };
+
+  userSelections.forEach((selectedNumber, index) => {
+    const quiz = quizzes[index];
+    if (!quiz) return;
+
+    if (selectedNumber === quiz.correct_option_number) {
+      results.correctWords.push(quiz.word);
+    } else {
+      results.incorrectWords.push(quiz.word);
+    }
+  });
+
+  console.log("Quiz check results:", results);
+  res.json(results);
 };
