@@ -12,11 +12,11 @@ router.post("/", async (req, res) => {
   }
 
   try {
-    const existingWord = await Word.findOne({ word });
+    const existingWord = await Word.findOne({ word }); // word sobat username pn search kar, if word and username matches in db, word already save aahe
     if (existingWord) {
       return res.status(400).json({ message: "Word already exists in dictionary" });
     }
-
+// create user defined collection named "words"
     const savedWord = new Word({ word, meaning });
     await savedWord.save();
 

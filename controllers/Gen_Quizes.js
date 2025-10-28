@@ -2,21 +2,11 @@ import OpenAI from "openai";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import Word from "../models/saveWord_Model.js";
-
+import connectDB from "./db.js";
+// import username from searchWords.js file
 dotenv.config();
 
-const connectDB = async () => {
-  try {
-    await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log("MongoDB connected...");
-  } catch (error) {
-    console.error("MongoDB connection failed:", error.message);
-    process.exit(1);
-  }
-};
+
 connectDB();
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -30,7 +20,7 @@ export let quizzes = [];  // Store all generated quizzes here for checking
 
 export const Gen_Quizes = async (req, res) => {
   try {
-    const wordEntries = await Word.find();
+    const wordEntries = await Word.find(); // add a condition to find only those words with the username stored in "userid" variable
     console.log(`Fetched ${wordEntries.length} words from DB.`);
 
     if (!wordEntries.length) {
