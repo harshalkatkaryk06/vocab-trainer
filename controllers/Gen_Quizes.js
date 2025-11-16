@@ -3,10 +3,8 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import Word from "../models/saveWord_Model.js";
 import connectDB from "./db.js";
-// import username from searchWords.js file
+
 dotenv.config();
-
-
 connectDB();
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -16,15 +14,19 @@ export let correct_option;
 export let correct_option_number;
 export let incorrect_options;
 export let numberedOptions;
-export let quizzes = [];  // Store all generated quizzes here for checking
+export let quizzes = []; // Store all generated quizzes here for checking
 
 export const Gen_Quizes = async (req, res) => {
   try {
-    const wordEntries = await Word.find(); // add a condition to find only those words with the username stored in "userid" variable
-    console.log(`Fetched ${wordEntries.length} words from DB.`);
+    // Get userid from JWT token (attached by isAuth middleware)
+    const { userid } = req.user;
+
+    // Find words for the logged-in user
+    const wordEntries = await Word.find({ userid });
+    console.log(`Fetched ${wordEntries.length} words from DB for user ${userid}.`);
 
     if (!wordEntries.length) {
-      return res.status(404).json({ error: "No words in dictionary" });
+      return res.status(404).json({ error: "No words in dictionary for this user." });
     }
 
     const allQuizzes = [];

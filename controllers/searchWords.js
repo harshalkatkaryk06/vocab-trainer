@@ -1,6 +1,5 @@
-// username import kar from login page
 import OpenAI from "openai";
-// get the username of the person searching the word from login component
+
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // This will hold the last searched word and meaning
