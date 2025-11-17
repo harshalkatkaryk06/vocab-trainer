@@ -6,7 +6,7 @@ const WordSchema = new mongoose.Schema({
   userid: { type: String, required: true },
 });
 
-// Unique for each user
-WordSchema.index({ word: 1, userid: 1 }, { unique: true });
+// Compound unique index to allow same word if userid differs, but prevent duplicates per user
+WordSchema.index({ userid: 1, word: 1 }, { unique: true });
 
 export default mongoose.model("Word", WordSchema);
