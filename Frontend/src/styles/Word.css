@@ -1,0 +1,52 @@
+.connection {
+  position: absolute; /* overlay */
+  top: 380px; /* adjust below search input */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 500px;
+  max-height: 400px;
+  background-color: #fff;
+  color: #000;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  overflow-y: auto; /* scroll if content exceeds height */
+  padding: 20px;
+  z-index: 100;
+}
+
+.results-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.results-content li {
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.results-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.save-btn,
+.cancel-btn {
+  padding: 8px 15px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.save-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.cancel-btn {
+  background-color: #dc3545;
+  color: white;
+}

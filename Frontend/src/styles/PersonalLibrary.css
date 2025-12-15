@@ -1,0 +1,112 @@
+/* MAIN WRAPPER */
+.home-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 90px;
+  gap: 20px;
+}
+
+/* GRID OF SAVED WORDS */
+.myword {
+  position: absolute;
+  top: 160px;
+  width: 90%;
+  height: 420px;
+
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+
+  display: grid;
+
+  /* EXACTLY 6 BOXES PER ROW */
+  grid-template-columns: repeat(6, 1fr);
+
+  gap: 15px;
+
+  overflow-y: auto;
+
+  /* Extra right padding for scrollbar space */
+  padding: 20px 30px 20px 20px;
+}
+
+/* WORD CARD */
+.first {
+  height: 100px;
+  background-color: lightblue;
+  border-radius: 10px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* ============================= */
+/*            MODAL              */
+/* ============================= */
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);   /* dim background */
+  backdrop-filter: blur(3px);   /* background blur */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5000;
+}
+
+.modal-content {
+  background: white;
+  width: 320px;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  text-align: center;
+}
+
+.word-details {
+  margin-top: 10px;
+  font-size: 15px;
+  color: #444;
+}
+
+/* MODAL BUTTONS */
+.modal-buttons {
+  margin-top: 25px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* CLOSE BUTTON */
+.close-btn {
+  background: #ddd;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* DELETE BUTTON */
+.delete-btn {
+  background: #ff4d4f;
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.delete-btn:hover {
+  background: #d90000;
+}

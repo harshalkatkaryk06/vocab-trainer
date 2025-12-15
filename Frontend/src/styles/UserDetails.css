@@ -1,0 +1,66 @@
+/* main container */
+.user-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 90px; /* space below navbar */
+}
+
+/* profile card */
+.profile {
+  position: absolute;
+  top: 140px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 500px;
+  max-height: 420px;
+  background-color: #fff;
+  color: #000;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  overflow-y: auto;
+  padding: 20px;
+  z-index: 100;
+}
+
+/* container inside profile */
+.data {
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* keeps info on top, buttons at bottom */
+}
+
+/* user info section */
+.info {
+  font-size: 18px;
+}
+
+/* bottom buttons */
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* buttons style */
+.edit-btn,
+.logout-btn {
+  flex: 1;
+  padding: 12px 0;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  max-width: 80px;
+}
+
+.edit-btn {
+  background-color: #4CAF50;
+  color: #fff;
+}
+
+.logout-btn {
+  background-color: #f44336;
+  color: #fff;
+}

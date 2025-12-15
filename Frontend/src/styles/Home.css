@@ -1,0 +1,9 @@
+/* Wrapper to center content */
+.home-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 90px; /* adjust for navbar height */
+  gap: 20px;
+}
+

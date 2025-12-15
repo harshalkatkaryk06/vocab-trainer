@@ -1,5 +1,7 @@
 
 import 'dotenv/config';
+import cors from "cors";
+
 import express from 'express';
 import AI_Route from './routes/AI_Route.js';
 import connectDB from './controllers/db.js';
@@ -8,10 +10,9 @@ import UserRoutes from './routes/UserRoutes.js';
 import { isAuth } from './middlewares/isAuth.js';
 
 
-
 const app = express();
 connectDB();
-
+app.use(cors());
 
 
 
