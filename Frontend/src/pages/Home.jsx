@@ -29,10 +29,16 @@ const Home = () => {
         }
       );
 
-      setResult(res.data);
+      // Only keep human-readable pronunciation
+      setResult({
+        word: res.data.word,
+        primaryDefinition: res.data.primaryDefinition,
+        pronunciation: res.data.pronunciationReadable, // ✅ human-readable only
+        examples: res.data.examples || [],
+      });
     } catch (error) {
       console.log("Error:", error);
-      setResult({ word, primaryDefinition: "Error fetching data." });
+      setResult({ word, primaryDefinition: "Error fetching data.", pronunciation: "" });
     }
 
     setLoading(false);
@@ -40,12 +46,21 @@ const Home = () => {
 
   // Save word to library
   const handleSave = async () => {
+    if (!result?.word) {
+      return alert("Search a word first!");
+    }
+
     try {
-      const token = localStorage.getItem("token"); // JWT stored after login
+      const token = localStorage.getItem("token");
 
       const res = await axios.post(
         "http://localhost:5000/dict",
-        {}, // backend reads from getLastSearched()
+        {
+          word: result.word,
+          meaning: result.primaryDefinition || "",
+          pronunciation: result.pronunciation || "", // ✅ human-readable only
+          examples: result.examples || []
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -53,10 +68,10 @@ const Home = () => {
         }
       );
 
-      alert("Word saved successfully!");
+      alert(res.data.message);
       console.log("Saved:", res.data);
     } catch (error) {
-      console.error("Save error:", error);
+      console.error("Save error:", error.response?.data);
       alert(error.response?.data?.message || "Failed to save word");
     }
   };

@@ -1,13 +1,12 @@
 /* Fix vertical issues in React */
 body {
     margin: 0;
-    padding-top: 10px;
-     /* adds gap from top */
- /* optional, same theme */
+    padding-top: 10px; /* adds gap from top */
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: linear-gradient(135deg, #f5f7fa, #e4e8ef); /* subtle background */
 }
 
-/* Your original CSS below (unchanged) */
-
+/* NAVBAR CONTAINER */
 .navbar {
     position: fixed;
     top: 10px;
@@ -24,9 +23,10 @@ body {
     margin: 0 auto;
     width: 100%;
     max-width: 1200px;
-    /* z-index: 1000; */
+    z-index: 1000;
 }
 
+/* LOGO */
 .navbar-logo {
     font-size: 28px;
     font-weight: bold;
@@ -34,6 +34,7 @@ body {
     flex-shrink: 0;
 }
 
+/* CENTER MENU */
 .navbar-menu {
     position: absolute;
     left: 50%;
@@ -44,20 +45,30 @@ body {
     list-style: none;
     display: flex;
     gap: 50px;
-    padding: 0;        /* Important fix */
-    margin: 0;         /* Important fix */
+    padding: 0;        /* fix default padding */
+    margin: 0;         /* fix default margin */
 }
 
 .navbar-menu ul li a {
     text-decoration: none;
     color: #fff;
     font-size: 18px;
+    padding: 10px 5px;
+    border-radius: 20px;
     transition: all 0.3s ease;
 }
 
 .navbar-menu ul li a:hover {
-    color: #8e54e9;
+    color: #fff;
+    background: linear-gradient(135deg, #8e54e9, #4776e6);
     transform: scale(1.1);
+}
+
+/* PROFILE ICON */
+.navbar-profile {
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .navbar-profile img {
@@ -65,4 +76,29 @@ body {
     height: 40px;
     border-radius: 50%;
     cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.navbar-profile img:hover {
+    border-color: #8e54e9;
+    transform: scale(1.1);
+    box-shadow: 0 6px 15px rgba(142, 84, 233, 0.5);
+}
+
+/* PROFILE LINK (text) */
+.navbar-profile a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.1);
+    transition: all 0.3s ease;
+}
+
+.navbar-profile a:hover {
+    background: linear-gradient(135deg, #8e54e9, #4776e6);
+    color: #fff;
+    transform: scale(1.05);
 }

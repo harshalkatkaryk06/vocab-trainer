@@ -10,8 +10,9 @@ const Navbar = () => {
         <ul>
           <li><Link to="/home">Home</Link></li>
           <li><Link to="/library">Library</Link></li>
+          <li><Link to="/quiz">Quiz</Link></li>  {/* ✅ ADD THIS */}
           <li><Link to="/word-of-the-day">Word of the Day</Link></li>
-          <li><Link to="/test">Test</Link></li>
+          {/* <li><Link to="/test">Test</Link></li> */}
           <li><Link to="/about">About</Link></li>
         </ul>
       </nav>

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 
 import Home from "./pages/Home";
 import PersonalLibrary from "./pages/PersonalLibrary";
+import QuizPage from "./pages/QuizPage"; 
 import WordOfTheDay from "./pages/WordOfTheDay";
 import VocabularyTest from "./pages/VocabularyTest";
 import About from "./pages/About";
@@ -10,8 +11,10 @@ import UserDetails from "./pages/UserDetails";
 import AuthForm from "./pages/AuthForm";
 import ProtectedRoute from "./services/ProtectedRoute";
 
+import '../src/App.css';
+
 const App = () => {
-  const token = localStorage.getItem("token"); // check if user is logged in
+  const token = localStorage.getItem("token");
 
   return (
     <Router>
@@ -71,8 +74,17 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+        {/* ✅ NEW QUIZ ROUTE */}
+        <Route
+          path="/quiz"
+          element={
+            <ProtectedRoute>
+              <QuizPage />
+            </ProtectedRoute>
+          }
+        />
 
-        {/* Catch-all route → redirect unknown paths to login */}
+        {/* Catch-all route */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>

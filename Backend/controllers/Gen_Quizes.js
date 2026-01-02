@@ -9,19 +9,17 @@ connectDB();
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-// Exported variables holding aggregated results
 export let correct_option;
 export let correct_option_number;
 export let incorrect_options;
 export let numberedOptions;
-export let quizzes = []; // Store all generated quizzes here for checking
+export let quizzes = []; 
 
 export const Gen_Quizes = async (req, res) => {
   try {
-    // Get userid from JWT token (attached by isAuth middleware)
     const { userid } = req.user;
 
-    // Find words for the logged-in user
+    
     const wordEntries = await Word.find({ userid });
     console.log(`Fetched ${wordEntries.length} words from DB for user ${userid}.`);
 
@@ -82,14 +80,13 @@ export const Gen_Quizes = async (req, res) => {
       console.log(`Quiz for "${word}" added.\n---------------------------\n`);
     }
 
-    // Save last quiz info globally
     const lastQuiz = allQuizzes[allQuizzes.length - 1];
     correct_option = lastQuiz.correct_option;
     correct_option_number = lastQuiz.correct_option_number;
     incorrect_options = lastQuiz.incorrect_options;
     numberedOptions = lastQuiz.numberedOptions;
 
-    quizzes = allQuizzes; // Export all quizzes for check quiz file
+    quizzes = allQuizzes;
 
     console.log(`\nAll Quizzes Generated:\n${JSON.stringify(allQuizzes, null, 2)}`);
 

@@ -60,10 +60,7 @@ const LoginForm = () => {
         icon="bxs-lock-alt"
       />
 
-      <div className="forgot-link">
-        <a href="#">Forgot password</a>
-      </div>
-
+     
       <button type="submit" className="btn">
         Login
       </button>

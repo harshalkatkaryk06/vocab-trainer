@@ -8,7 +8,7 @@ import connectDB from './controllers/db.js';
 import saveWord from './controllers/saveWordsController.js';
 import UserRoutes from './routes/UserRoutes.js';
 import { isAuth } from './middlewares/isAuth.js';
-
+import quizRecordRouter from "./controllers/quizRecordController.js";
 
 const app = express();
 connectDB();
@@ -19,7 +19,7 @@ app.use(cors());
 app.use(express.json());
 
 
-
+app.use("/search_words", isAuth, quizRecordRouter);
 app.use('/search_words',isAuth, AI_Route);
 app.use('/dict',isAuth, saveWord);
 app.use('/user',UserRoutes);

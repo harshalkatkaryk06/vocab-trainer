@@ -11,3 +11,7 @@ const WordSchema = new mongoose.Schema({
 WordSchema.index({ userid: 1, word: 1 }, { unique: true });
 
 export default mongoose.model("Word", WordSchema);
+
+
+
+

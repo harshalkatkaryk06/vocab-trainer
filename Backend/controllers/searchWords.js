@@ -3,7 +3,13 @@ import OpenAI from "openai";
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // Store the last searched word
-let lastSearched = { word: null, primaryDefinition: null, pronunciation: null, pronunciationReadable: null, examples: [] };
+let lastSearched = {
+  word: null,
+  primaryDefinition: null,
+  pronunciation: null,
+  pronunciationReadable: null,
+  examples: []
+};
 
 export const searchWords = async (req, res) => {
   const { word } = req.body;
@@ -11,47 +17,57 @@ export const searchWords = async (req, res) => {
 
   try {
     const prompt = `
-You are a helpful dictionary assistant.
+You are a professional English dictionary assistant.
 
-Provide the following details for the word "${word}":
-1. Primary Definition (concise English)
-2. Pronunciation in phonetic format
-3. Readable Pronunciation (normal English letters)
-4. Two example sentences using the word
+For the word "${word}", return ONLY valid JSON in the exact format below.
+Do NOT include markdown, explanations, or extra text.
 
-Format your response exactly as JSON:
+Rules for pronunciation:
+- "pronunciation" MUST be IPA phonetic symbols (example: ˈvoʊ.kæb)
+- "pronunciationReadable" MUST be written in simple English letters
+- Use hyphens between syllables
+- DO NOT use IPA symbols (ˈ æ ʊ ɔ ə etc.) in pronunciationReadable
+- pronunciationReadable should be easy for beginners to read
+
+Example:
 {
-  "primaryDefinition": "...",
-  "pronunciation": "...",
-  "pronunciationReadable": "...",
-  "examples": ["Example sentence 1", "Example sentence 2"]
+  "primaryDefinition": "short for vocabulary",
+  "pronunciation": "ˈvoʊ.kæb",
+  "pronunciationReadable": "VOH-kab",
+  "examples": [
+    "I am learning new vocab every day.",
+    "This app helps improve your vocab."
+  ]
 }
+
+Now generate the response for the given word.
 `;
 
     const response = await openai.chat.completions.create({
       model: "gpt-4",
       messages: [
-        { role: "system", content: "You are a helpful dictionary assistant." },
-        { role: "user", content: prompt },
+        { role: "system", content: "You are a professional English dictionary assistant." },
+        { role: "user", content: prompt }
       ],
-      temperature: 0.5,
+      temperature: 0.3
     });
 
     const rawContent = response.choices[0].message.content.trim();
+
     let data;
     try {
       data = JSON.parse(rawContent);
     } catch (err) {
-      console.error("Failed to parse JSON from OpenAI:", rawContent);
+      console.error("❌ Failed to parse JSON from OpenAI:", rawContent);
       return res.status(500).json({ error: "Failed to parse response from AI" });
-    }
+    } 
 
     lastSearched = { word, ...data };
-    console.log(lastSearched);
+    console.log("✅ Word fetched:", lastSearched);
 
     res.json({ word, ...data });
   } catch (error) {
-    console.error("OpenAI API error:", error);
+    console.error("❌ OpenAI API error:", error);
     res.status(500).json({ error: "Failed to get response" });
   }
 };

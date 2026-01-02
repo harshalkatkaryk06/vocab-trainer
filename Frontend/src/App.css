@@ -1,0 +1,10 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  background: linear-gradient(135deg, #9ab6df, #e4e8ef);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}

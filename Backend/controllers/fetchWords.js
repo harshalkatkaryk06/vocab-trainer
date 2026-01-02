@@ -1,12 +1,10 @@
 import Word from '../models/saveWord_Model.js';
 
-// Export a function to fetch words
+
 export const fetchWord = async (req, res) => {
   try {
-    // Get userid from JWT token (attached by isAuth middleware)
     const { userid } = req.user;
-
-    // Find all words for the logged-in user
+    
     const words = await Word.find({ userid });
 
     if (!words.length) {

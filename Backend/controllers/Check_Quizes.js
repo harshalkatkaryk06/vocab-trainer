@@ -1,7 +1,7 @@
-import { quizzes } from "./Gen_Quizes.js"; // Import the quizzes generated
+import { quizzes } from "./Gen_Quizes.js"; 
 
 export const checkQuizAnswer = (req, res) => {
-  const userSelections = req.body.selectedNumbers; // Expect an array like [4, 2]
+  const userSelections = req.body.selectedNumbers; 
 
   if (!Array.isArray(userSelections)) {
     return res.status(400).json({ error: "selectedNumbers must be an array" });
