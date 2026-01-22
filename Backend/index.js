@@ -17,7 +17,7 @@ app.use(cors({
   origin: [
     "http://localhost:3000",
     "http://localhost:5173",
-    "https://your-frontend-name.vercel.app"
+    "https://vocab-trainer-hw5d.vercel.app/"
   ],
   credentials: true
 }));
