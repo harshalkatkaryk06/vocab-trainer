@@ -1,4 +1,3 @@
-// models/Word.js
 import mongoose from 'mongoose';
 
 const wordSchema = new mongoose.Schema({
@@ -7,9 +6,9 @@ const wordSchema = new mongoose.Schema({
   pronunciation: String,
   examples: [String],
   userid: { type: String, required: true }
-}, { collection: 'users' }); // your existing collection
+}, { collection: 'users' });
 
-// ✅ Prevent OverwriteModelError
+
 const Word = mongoose.models.Word || mongoose.model('Word', wordSchema);
 
 export default Word;

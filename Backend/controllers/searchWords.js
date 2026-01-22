@@ -2,7 +2,7 @@ import OpenAI from "openai";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-// Store the last searched word
+
 let lastSearched = {
   word: null,
   primaryDefinition: null,

@@ -5,7 +5,7 @@ import { checkQuizAnswer } from '../controllers/Check_Quizes.js';
 import {isAuth} from '../middlewares/isAuth.js';
 const router = express.Router();
 
-router.post('/word', isAuth,searchWords);  // POST /search_words/
+router.post('/word', isAuth,searchWords);
 router.post('/gen_quizes', isAuth,Gen_Quizes);
 router.post('/check_quiz', isAuth,checkQuizAnswer);  
 

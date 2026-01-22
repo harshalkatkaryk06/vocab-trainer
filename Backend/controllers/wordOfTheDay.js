@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 import User from "../models/user.js";
-// ✅ REMOVED conflicting Word import
+
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -34,7 +34,6 @@ export const wordOfTheDay = async (req, res) => {
 
     const result = JSON.parse(response.choices[0].message.content);
     
-    // ✅ Just return data - let Save button handle saving
     res.json({
       success: true,
       word: result.word,

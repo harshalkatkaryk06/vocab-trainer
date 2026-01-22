@@ -8,8 +8,8 @@ import { wordOfTheDay } from '../controllers/wordOfTheDay.js';
 import saveWordsController from '../controllers/saveWordsController.js';
 import bcrypt from "bcryptjs";
 // At TOP of UserRoutes.js - ADD THESE
-import User from "../models/user.js";  // ✅ Your User model
-import Word from "../models/saveWord_Model.js";  // ✅ Your Word model
+import User from "../models/user.js";
+import Word from "../models/saveWord_Model.js";
 
 const router = express.Router();
 
@@ -22,17 +22,14 @@ router.post('/deleteWord', isAuth, (req, res, next) => {
 }, deleteWord);
 
 router.get('/word_of_the_day', isAuth, wordOfTheDay);
-router.use('/save-words', isAuth, saveWordsController);  // ✅ FIXED: .use()
+router.use('/save-words', isAuth, saveWordsController);
 
-// In your user routes file (e.g. routes/user.js)
 router.get("/profile", isAuth, async (req, res) => {
   try {
-    const { userid } = req.user; // from auth middleware
+    const { userid } = req.user;
     
-    // Get user details (exclude password)
     const user = await User.findOne({ userid }).select('username email age');
     
-    // Count saved words for this user
     const savedWordsCount = await Word.countDocuments({ userid });
     
     if (!user) {
@@ -92,10 +89,8 @@ router.post("/forget-password", async (req, res) => {
       return res.status(400).json({ error: "Username and new password required" });
     }
 
-    // Hash new password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    // Update user password by username
     const updatedUser = await User.findOneAndUpdate(
       { username },
       { password: hashedPassword },

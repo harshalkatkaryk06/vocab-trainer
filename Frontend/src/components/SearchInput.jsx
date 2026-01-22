@@ -6,6 +6,7 @@ const SearchInput = ({ onSearch }) => {
 
   return (
     <div className="home-container">
+      <h1>Let's search a word 😊</h1>
       <input
         type="text"
         className="home-input"

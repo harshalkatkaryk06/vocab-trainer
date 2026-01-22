@@ -75,7 +75,9 @@
 } */
 
 
-
+.home-container h1{
+  padding: auto;
+}
 
 .home-container {
   display: flex;
